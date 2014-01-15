@@ -1,0 +1,6 @@
+host: localhost
+port: 54321
+# maximum DRbMessage size in bytes
+# currently set to 8 * default (8 * 25MB)
+message_size: 209715200
+#list of classes to expose and their ports
