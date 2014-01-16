@@ -1,5 +1,5 @@
 require 'taglib'
-class Handlers::TagWriter
+class RFM::Handlers::TagWriter
   def write_tags(file, tags)
     # tags v2 will be read and written according to the :encoding settings
     mp3 = Mp3Info.open(file, :encoding => 'utf-8')

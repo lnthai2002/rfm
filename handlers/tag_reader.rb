@@ -1,5 +1,5 @@
 require 'taglib'
-module Darkportal
+module RFM
   module Handlers
     class TagReader
       def read_generic_file(file)
@@ -20,19 +20,21 @@ module Darkportal
         end
       end
       
-      def process(file)
+      def read_mp3(file)
         tags = {}
         TagLib::MPEG::File.open(file) do |fh|
           properties = fh.audio_properties
           tag = fh.id3v2_tag
-          tags = {:title  => tag.title,
-                  :artist => tag.artist,
-                  :albulm => tag.album,
-                  :year   => tag.year,
-                  :track  => tag.track,
-                  :genre  => tag.genre,
-                  :comment=> tag.comment,
-                  :length => properties.length
+          tags = {:file     => file,
+                  :timestamp=>File.mtime(file).to_s,
+                  :title    => tag.title,
+                  :artist   => tag.artist,
+                  :albulm   => tag.album,
+                  :year     => tag.year,
+                  :track    => tag.track,
+                  :genre    => tag.genre,
+                  :comment  => tag.comment,
+                  :length   => properties.length
                   }
         
           # Attached picture frame

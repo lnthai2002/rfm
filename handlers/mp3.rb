@@ -1,5 +1,5 @@
-require './tag_info.rb'
-class Handlers::Mp3
+#require './tag_info.rb'
+class RFM::Handlers::Mp3
   include TagInfo
 
   def initialize(logger)

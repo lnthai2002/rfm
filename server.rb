@@ -10,21 +10,24 @@ require 'yaml'
 require 'drb'
 require 'drb/acl'
 require 'rubygems'
+require './lib/disk_crawler.rb'
+require './handlers/tag_reader.rb'
+require './handlers/tag_writer.rb'
+#Dir[File.dirname(__FILE__) + '/handlers/*.rb'].each {|file| require file }
 
 CONFIG_FILE="#{File.expand_path(File.dirname(__FILE__))}/config.yml"
 config = YAML.load(File.open(CONFIG_FILE) {|f| f.read})
 
-acl = ACL.new(%w{deny all
-                 allow localhost})
-DRb.install_acl(acl)
+#TODO: enable access control list
+#acl = ACL.new(%w{deny all
+#                 allow localhost})
+#DRb.install_acl(acl)
 
-#List of class to expose and their port
-DRb.start_service("druby://#{config['host']}:#{config['port']}", 
-                  FortiusOne::ObjectStore.new(config['target'].to_i,
-                                              config['max'],
-                                              File.dirname(__FILE__)+config['basedir']),
-                  DRb.config.merge({:load_limit=>config['message_size'].to_i}))
+#Expose classes
+config['classes'].each do |klass|
+  DRb.start_service("druby://#{config['host']}:#{klass['port']}", 
+                    Object::const_get(klass['name']).new,
+                    DRb.config.merge({:load_limit=>config['message_size'].to_i}))  
+end
+
 DRb.thread.join
-
-$processor = nil
-
