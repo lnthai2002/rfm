@@ -11,12 +11,13 @@ require 'drb'
 require 'drb/acl'
 require 'rubygems'
 require './lib/disk_crawler.rb'
+require './lib/secure_state.rb'
 require './handlers/tag_reader.rb'
 require './handlers/tag_writer.rb'
 #Dir[File.dirname(__FILE__) + '/handlers/*.rb'].each {|file| require file }
 
 CONFIG_FILE="#{File.expand_path(File.dirname(__FILE__))}/config.yml"
-config = YAML.load(File.open(CONFIG_FILE) {|f| f.read})
+CONFIG = YAML.load(File.open(CONFIG_FILE) {|f| f.read})
 
 #TODO: enable access control list
 #acl = ACL.new(%w{deny all
@@ -24,10 +25,10 @@ config = YAML.load(File.open(CONFIG_FILE) {|f| f.read})
 #DRb.install_acl(acl)
 
 #Expose classes
-config['classes'].each do |klass|
-  DRb.start_service("druby://#{config['host']}:#{klass['port']}", 
+CONFIG['classes'].each do |klass|
+  DRb.start_service("druby://#{CONFIG['host']}:#{klass['port']}", 
                     Object::const_get(klass['name']).new,
-                    DRb.config.merge({:load_limit=>config['message_size'].to_i}))  
+                    DRb.config.merge({:load_limit=>CONFIG['message_size'].to_i}))  
 end
 
 DRb.thread.join

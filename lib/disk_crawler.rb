@@ -1,7 +1,11 @@
+require "#{File.dirname(__FILE__)}/secure_state.rb"
+
 module RFM
   module Lib
     class DiskCrawler
-      def scan_and_process_files(top_dir, handler, recursive=false, &block)
+      def scan_and_process_files(top_dir, handler, recursive=false, security_key, &block)
+        RFM::SecureState.valid?(security_key)
+
         top_dir = top_dir.chomp("/")
         if not File.exist?(top_dir)
           raise ArgumentError, "Folder #{top_dir} does not exist!"
