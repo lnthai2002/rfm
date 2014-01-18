@@ -29,7 +29,7 @@ module RFM
                   :timestamp=>File.mtime(file).to_s,
                   :title    => tag.title,
                   :artist   => tag.artist,
-                  :albulm   => tag.album,
+                  :album   => tag.album,
                   :year     => tag.year,
                   :track    => tag.track,
                   :genre    => tag.genre,
