@@ -1,14 +1,8 @@
 require "#{File.dirname(__FILE__)}/secure_state.rb"
-
+$SAFE=1
 module RFM
   module Lib
-    class DiskCrawler
-      #block all unsafe method
-      safe_methods = %w{scan_and_process_files respond_to? to_s}
-      (instance_methods - safe_methods).each do |method|
-        undef_method method
-      end
-
+    class DiskCrawler < RFM::SecureState
       def scan_and_process_files(top_dir, handler, recursive=false, security_key, &block)
         RFM::SecureState.valid?(security_key)
 

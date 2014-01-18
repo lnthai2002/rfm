@@ -1,13 +1,9 @@
+require "#{File.dirname(__FILE__)}/../lib/secure_state.rb"
 require 'taglib'
+$SAFE=1
 module RFM
   module Handlers
-    class TagReader
-      #block all unsafe method
-      safe_methods = %w{read_mp3 respond_to? to_s}
-      (instance_methods - safe_methods).each do |method|
-        undef_method method
-      end
-
+    class TagReader < RFM::SecureState
       def read_generic_file(file)
         TagLib::FileRef.open(file) do |fileref|
           tag = fileref.tag
