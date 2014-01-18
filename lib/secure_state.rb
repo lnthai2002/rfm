@@ -1,6 +1,7 @@
 require 'yaml'
 module RFM
   class SecureState
+    #load and record security key
     CONFIG_FILE="#{File.expand_path(File.dirname(__FILE__))}/..//config.yml"
     CONFIG = YAML.load(File.open(CONFIG_FILE) {|f| f.read})
     @security_key = CONFIG['security_key']

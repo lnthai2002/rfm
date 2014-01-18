@@ -2,6 +2,12 @@ require 'taglib'
 module RFM
   module Handlers
     class TagReader
+      #block all unsafe method
+      safe_methods = %w{read_mp3 respond_to? to_s}
+      (instance_methods - safe_methods).each do |method|
+        undef_method method
+      end
+
       def read_generic_file(file)
         TagLib::FileRef.open(file) do |fileref|
           tag = fileref.tag
