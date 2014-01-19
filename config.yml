@@ -3,10 +3,12 @@
 message_size: 209715200
 
 #list of classes to expose and their ports
-security_key: 'to be used when you want to talk to this DRB'
+security_key: to be used when you want to talk to this DRB
 host: localhost
 classes:
-  - name: "RFM::Lib::DiskCrawler"
+  - name: RFM::Lib::DiskCrawler
     port: 54321
-  - name: "RFM::Handlers::TagReader"
+  - name: RFM::Handlers::TagReader
     port: 54322
+  - name: RFM::Handlers::TagWriter
+    port: 54323
