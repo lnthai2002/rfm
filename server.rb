@@ -11,9 +11,9 @@ require 'drb'
 require 'drb/acl'
 require 'rubygems'
 require './lib/disk_crawler.rb'
-require './lib/secure_state.rb'
 require './handlers/tag_reader.rb'
 require './handlers/tag_writer.rb'
+require './handlers/streamer.rb'
 #Dir[File.dirname(__FILE__) + '/handlers/*.rb'].each {|file| require file }
 
 CONFIG_FILE="#{File.expand_path(File.dirname(__FILE__))}/config.yml"

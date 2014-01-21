@@ -12,3 +12,5 @@ classes:
     port: 54322
   - name: RFM::Handlers::TagWriter
     port: 54323
+  - name: RFM::Handlers::Streamer
+    port: 54324
