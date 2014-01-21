@@ -1,8 +1,11 @@
+require "#{File.dirname(__FILE__)}/../lib/secure_state.rb"
 require 'taglib'
+$SAFE=1
 module RFM
   module Handlers
     class TagWriter
-      def write_mp3(files)
+      def write_mp3(files, security_key)
+        RFM::SecureState.valid?(security_key)
         files.each do |file|
           TagLib::MPEG::File.open(file['file']) do |fh|
             if File.mtime(file['file']).to_s == file['timestamp']#only write if file has not been modified

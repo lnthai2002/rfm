@@ -22,7 +22,8 @@ module RFM
         end
       end
       
-      def read_mp3(file)
+      def read_mp3(file, security_key)
+        RFM::SecureState.valid?(security_key)
         tags = {}
         TagLib::MPEG::File.open(file) do |fh|
           properties = fh.audio_properties
