@@ -1,14 +1,16 @@
-require "#{File.dirname(__FILE__)}/secure_state.rb"
 $SAFE=1
 module RFM
   module Lib
-    class DiskCrawler < RFM::SecureState
+    class DiskCrawler
       def scan_and_process_files(top_dir, handler, recursive=false, security_key, &block)
-        RFM::SecureState.valid?(security_key)
-
+        RFM::Lib::SecureState.valid?(security_key)
         top_dir = top_dir.chomp("/")
-        if not File.exist?(top_dir)
+        if not File.realpath(top_dir).start_with?(CONFIG['top_dir'])
+          raise ArgumentError, "#{top_dir} is not a subdirectory of the folder being exposed!"
+        elsif not File.exist?(top_dir)
           raise ArgumentError, "Folder #{top_dir} does not exist!"
+        elsif not File.directory?(top_dir)
+          raise ArgumentError, "#{top_dir} is not a directory!"
         else
           results = Array.new
           craw(top_dir, handler, recursive){|file|
