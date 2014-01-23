@@ -1,5 +1,6 @@
 module RFM
-  module Lib
+  module Public
+    #Any class exposed to public must extend this class to be safer
     class SecureState
       @security_key = nil #tobe injected by server
       #block all unsafe method

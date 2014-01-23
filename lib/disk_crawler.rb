@@ -1,20 +1,15 @@
-$SAFE=1
 module RFM
   module Lib
     class DiskCrawler
-      def scan_and_process_files(top_dir, handler, recursive=false, security_key, &block)
-        RFM::Lib::SecureState.valid?(security_key)
-        top_dir = top_dir.chomp("/")
-        if not File.realpath(top_dir).start_with?(CONFIG['top_dir'])
-          raise ArgumentError, "#{top_dir} is not a subdirectory of the folder being exposed!"
-        elsif not File.exist?(top_dir)
+      def scan_and_process_files(top_dir, handler, recursive=false, &block)
+        if not File.exist?(top_dir)
           raise ArgumentError, "Folder #{top_dir} does not exist!"
         elsif not File.directory?(top_dir)
           raise ArgumentError, "#{top_dir} is not a directory!"
         else
-          results = Array.new
+          results = Hash.new
           craw(top_dir, handler, recursive){|file|
-            results << block.call(file)
+            results.merge!(block.call(file))
           }
           return results
         end

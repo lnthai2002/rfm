@@ -31,7 +31,7 @@ if $0 == __FILE__
   begin
     if options[:dir] != nil
       #declare path to search when require file
-      ['lib', 'handlers'].each do |dir|
+      ['public', 'lib', 'handlers'].each do |dir|
         dir = "#{File.dirname(__FILE__)}/"+dir
         $LOAD_PATH.unshift(dir) unless $LOAD_PATH.include?(dir)
       end
@@ -40,7 +40,7 @@ if $0 == __FILE__
       require 'secure_state.rb'
 
       #Inject security key
-      class RFM::Lib::SecureState
+      class RFM::Public::SecureState
         security_key = SecureRandom.hex
         puts security_key
         @security_key = security_key

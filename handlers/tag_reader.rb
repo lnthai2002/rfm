@@ -1,7 +1,6 @@
-$SAFE=1
 module RFM
   module Handlers
-    class TagReader < RFM::Lib::SecureState
+    class TagReader
       def read_generic_file(file)
         TagLib::FileRef.open(file) do |fileref|
           tag = fileref.tag
@@ -20,23 +19,20 @@ module RFM
         end
       end
       
-      def read_mp3(file, security_key)
-        RFM::Lib::SecureState.valid?(security_key)
+      def read_mp3(file)
         tags = {}
         TagLib::MPEG::File.open(file) do |fh|
           properties = fh.audio_properties
           tag = fh.id3v2_tag
-          tags = {:file     => file,
-                  :timestamp=>File.mtime(file).to_s,
+          tags = {:timestamp=>File.mtime(file).to_s,
                   :title    => tag.title,
                   :artist   => tag.artist,
-                  :album   => tag.album,
+                  :album    => tag.album,
                   :year     => tag.year,
                   :track    => tag.track,
                   :genre    => tag.genre,
                   :comment  => tag.comment,
-                  :length   => properties.length
-                  }
+                  :length   => properties.length}
         
           # Attached picture frame
           cover = tag.frame_list('APIC').first
@@ -44,7 +40,7 @@ module RFM
             tags[:apic] = {:mime_type=>cover.mime_type, :pic=>cover.picture}
           end
         end
-        return tags
+        return {file => tags}
       end
     end
   end
