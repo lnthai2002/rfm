@@ -1,15 +1,11 @@
 require 'disk_crawler'
-require 'tag_writer'
-require 'tag_reader'
+require 'mp3_tag_editor'
 require 'streamer'
-$SAFE=1
+#$SAFE=1
 module RFM
   module Public
-    #TODO: hook a call to check valid? for each method
     class FileSystem < SecureState
-      def find_mp3(folder, recursive=false, security_key)
-        RFM::Public::SecureState.valid?(security_key)
-        
+      def find_mp3(security_key, folder, recursive=false)
         folder = folder.chomp("/")
         
         if not File.realpath(folder).start_with?(CONFIG['top_dir'])
@@ -23,8 +19,7 @@ module RFM
         end
       end
 
-      def write_mp3_tags(files, security_key)
-        RFM::Public::SecureState.valid?(security_key)
+      def write_mp3_tags(security_key, files)
         tag_writer = RFM::Handlers::Mp3TagEditor.new
         results = Hash.new
         files.each do |file, tags|
@@ -37,8 +32,7 @@ module RFM
         return results
       end
 
-      def get_audio_file(filename, security_key)
-        RFM::Public::SecureState.valid?(security_key)
+      def get_audio_file(security_key, filename)
         if not File.realpath(filename).start_with?(CONFIG['top_dir'])
           raise ArgumentError, "#{file} is not in the folder being exposed!"
         else
@@ -46,6 +40,9 @@ module RFM
           return streamer.get_file(filename, security_key)
         end
       end
+
+      #this must be at the end because methods to be intercepted must be defined above
+      intercept_and_secure :find_mp3, :write_mp3_tags, :get_audio_file
     end
   end
 end

@@ -42,7 +42,7 @@ if $0 == __FILE__
       #Inject security key
       class RFM::Public::SecureState
         security_key = SecureRandom.hex
-        puts security_key
+        puts "Security key: #{security_key}"
         @security_key = security_key
       end
 
