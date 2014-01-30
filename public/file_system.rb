@@ -5,6 +5,7 @@ require 'streamer'
 $SAFE=1
 module RFM
   module Public
+    #TODO: hook a call to check valid? for each method
     class FileSystem < SecureState
       def find_mp3(folder, recursive=false, security_key)
         RFM::Public::SecureState.valid?(security_key)
@@ -38,8 +39,12 @@ module RFM
 
       def get_audio_file(filename, security_key)
         RFM::Public::SecureState.valid?(security_key)
-        streamer = RFM::Handlers::Streamer.new
-        return streamer.get_file(filename, security_key)
+        if not File.realpath(filename).start_with?(CONFIG['top_dir'])
+          raise ArgumentError, "#{file} is not in the folder being exposed!"
+        else
+          streamer = RFM::Handlers::Streamer.new
+          return streamer.get_file(filename, security_key)
+        end
       end
     end
   end
