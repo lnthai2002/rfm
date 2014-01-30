@@ -15,22 +15,22 @@ module RFM
           raise ArgumentError, "#{folder} is not a subdirectory of the folder being exposed!"
         else
           crawler = RFM::Lib::DiskCrawler.new
-          tag_reader = RFM::Handlers::TagReader.new
+          tag_reader = RFM::Handlers::Mp3TagEditor.new
           return crawler.scan_and_process_files(folder, tag_reader, recursive){|file|
-            tag_reader.read_mp3(file)
+            tag_reader.get_tags(file)
           }
         end
       end
 
       def write_mp3_tags(files, security_key)
         RFM::Public::SecureState.valid?(security_key)
-        tag_writer = RFM::Handlers::TagWriter.new
+        tag_writer = RFM::Handlers::Mp3TagEditor.new
         results = Hash.new
         files.each do |file, tags|
           if not File.realpath(file).start_with?(CONFIG['top_dir'])
             raise ArgumentError, "#{file} is not in the folder being exposed!"
           else
-            results.merge!(tag_writer.write_mp3(file, tags))
+            results.merge!(tag_writer.set_tags(file, tags))
           end
         end
         return results
