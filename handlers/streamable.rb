@@ -1,6 +1,6 @@
 module RFM
   module Handlers
-    class Streamer
+    module Streamable
       def get_file(filename, security_key)
         return File.read(filename)
       end

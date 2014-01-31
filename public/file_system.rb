@@ -1,6 +1,5 @@
 require 'disk_crawler'
-require 'mp3_tag_editor'
-require 'streamer'
+require 'mp3'
 #$SAFE=1
 module RFM
   module Public
@@ -9,10 +8,10 @@ module RFM
         folder = folder.chomp("/")
         
         if not File.realpath(folder).start_with?(CONFIG['top_dir'])
-          raise ArgumentError, "#{folder} is not a subdirectory of the folder being exposed!"
+          raise ArgumentError, "#{folder} is not in the folder being exposed!"
         else
           crawler = RFM::Lib::DiskCrawler.new
-          tag_reader = RFM::Handlers::Mp3TagEditor.new
+          tag_reader = RFM::Handlers::Mp3.new
           return crawler.scan_and_process_files(folder, tag_reader, recursive){|file|
             tag_reader.get_tags(file)
           }
@@ -20,7 +19,7 @@ module RFM
       end
 
       def write_mp3_tags(security_key, files)
-        tag_writer = RFM::Handlers::Mp3TagEditor.new
+        tag_writer = RFM::Handlers::Mp3.new
         results = Hash.new
         files.each do |file, tags|
           if not File.realpath(file).start_with?(CONFIG['top_dir'])
@@ -32,17 +31,17 @@ module RFM
         return results
       end
 
-      def get_audio_file(security_key, filename)
+      def get_mp3_file(security_key, filename)
         if not File.realpath(filename).start_with?(CONFIG['top_dir'])
           raise ArgumentError, "#{file} is not in the folder being exposed!"
         else
-          streamer = RFM::Handlers::Streamer.new
+          streamer = RFM::Handlers::Mp3.new
           return streamer.get_file(filename, security_key)
         end
       end
 
       #this must be at the end because methods to be intercepted must be defined above
-      intercept_and_secure :find_mp3, :write_mp3_tags, :get_audio_file
+      intercept_and_secure :find_mp3, :write_mp3_tags, :get_mp3_file
     end
   end
 end

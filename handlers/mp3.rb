@@ -1,6 +1,10 @@
+require 'streamable'
+
 module RFM
   module Handlers
-    class Mp3TagEditor
+    class Mp3
+      include Streamable
+
       #TODO: move this to a generic tag editor and delegate to that class
       def read_generic_file(file)
         TagLib::FileRef.open(file) do |fileref|
