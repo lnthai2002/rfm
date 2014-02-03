@@ -33,8 +33,8 @@ module RFM
                   :title    => tag.title,
                   :artist   => tag.artist,
                   :album    => tag.album,
-                  :year     => tag.year,
-                  :track    => tag.track,
+                  :year     => tag.year == 0 ? nil : tag.year, #taglib return 0 if no year frame found
+                  :track    => tag.track == 0? nil : tag.track,#taglib return 0 if no track frame found
                   :genre    => tag.genre,
                   :comment  => tag.comment,
                   :length   => properties.length}
@@ -58,8 +58,6 @@ module RFM
               if tags[id] != nil && ['title', 'artist', 'year', 'track', 'album', 'genre', 'comment'].include?(id)
                 if tags[id].strip.empty?
                   tags[id] = nil
-                elsif ['year', 'track'].include?(id)
-                  tags[id] = tags[id].to_i
                 end
               end
             end
@@ -67,8 +65,8 @@ module RFM
             tag.title  = tags['title']
             tag.artist = tags['artist']
             tag.album  = tags['album']
-            tag.year   = tags['year'] if tags['year'] != nil #taglib doesnt allow set year to nil
-            tag.track  = tags['track'] if tags['track'] != nil #taglib doesnt allow set track to nil
+            tag.year   = tags['year'].to_i  #taglib doesnt allow set year to nil
+            tag.track  = tags['track'].to_i #taglib doesnt allow set track to nil
             tag.genre  = tags['genre']
             tag.comment= tags['comment']
 
