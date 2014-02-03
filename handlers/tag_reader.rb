@@ -1,9 +1,7 @@
-require "#{File.dirname(__FILE__)}/../lib/secure_state.rb"
-require 'taglib'
 $SAFE=1
 module RFM
   module Handlers
-    class TagReader < RFM::SecureState
+    class TagReader < RFM::Lib::SecureState
       def read_generic_file(file)
         TagLib::FileRef.open(file) do |fileref|
           tag = fileref.tag
@@ -23,7 +21,7 @@ module RFM
       end
       
       def read_mp3(file, security_key)
-        RFM::SecureState.valid?(security_key)
+        RFM::Lib::SecureState.valid?(security_key)
         tags = {}
         TagLib::MPEG::File.open(file) do |fh|
           properties = fh.audio_properties
